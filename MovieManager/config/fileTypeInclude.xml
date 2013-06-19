@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <file name="MPEG-1" type="video/mpeg" />
+	<file name="MP4 video" type="video/mp4" />
+	<file name="Ogg Theora" type="video/ogg" />
+	<file name="QuickTime video" type="video/quicktime" />
+	<file name="WebM Matroska-based" type="video/webm" />
+	<file name="Matroska (mkv)" type="video/x-matroska" />
+	<file name="Windows Media Video" type="video/x-ms-wmv" />
+	<file name="Flash video (FLV files)" type="video/x-flv" />
+</root>
