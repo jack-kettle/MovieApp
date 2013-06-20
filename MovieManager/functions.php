@@ -13,7 +13,7 @@
 	$a_file_types = array();
 	
 	foreach ($o_xml->file as $child) {
-	    array_push($a_file_types, $child['type']);
+	    array_push($a_file_types, $child['extension']);
 	}
 	
 	return $a_file_types;
@@ -28,36 +28,19 @@
     */
     function fn_get_files($s_Path){
 	
-	@$o_handle = opendir($s_Path);
+	$o_dir_iterator = new DirectoryIterator($s_Path);
 
 	$a_file_types = fn_get_user_specified_file_types();
-
-	// check if directory is empty
-	if ($o_handle != NULL) {
-
-	    // create new finfo object
-	    $o_file_info = new finfo();
-
-	    while ($s_entry = readdir($o_handle)) {
-
-		// Get the mime type of the file
-		@$s_mime_type = $o_file_info->buffer(
-			file_get_contents($s_Path.$s_entry),FILEINFO_MIME_TYPE);
-
-		// If the file is not empty and it's mime type is specified add
-		// the path to the array
-		if( $s_mime_type != "application/x-empty" 
-			&& in_array($s_mime_type, $a_file_types) ){
-
-		    // testing
-		    echo $s_mime_type." - ".$s_entry."<br>";
-
+	
+	foreach($o_dir_iterator as $o_file) {
+	    if (!$o_dir_iterator->isDot()) {
+		
+		$s_extension = $o_file->getExtension();
+			
+		if( in_array($s_extension, $a_file_types)){
+		    echo $o_file . "<br>".$s_extension."<br><hr>";
 		}
 	    }
-	    closedir($o_handle);
-
-	}else{
-	    echo 'Folder does not exsist';
 	}
     }
 ?>
