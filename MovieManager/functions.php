@@ -38,7 +38,9 @@
 		$s_extension = $o_file->getExtension();
 			
 		if( in_array($s_extension, $a_file_types)){
-		    echo $o_file . "<br>".$s_extension."<br><hr>";
+		    printf("Filename: %s<br>", $o_file);
+		    printf("Extension: %s<br>", $s_extension);#
+		    printf("Path: %s", $o_file->getPath()."/".$o_file."<hr>");
 		}
 	    }
 	}
