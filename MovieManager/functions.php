@@ -7,16 +7,16 @@
     * Returns 	:   Array of file types
     */
     function fn_get_user_specified_file_types(){
-	$s_path = "config/fileTypeInclude.xml";
-	$o_xml = simplexml_load_file($s_path);
-	
-	$a_file_types = array();
-	
-	foreach ($o_xml->file as $child) {
-	    array_push($a_file_types, $child['extension']);
-	}
-	
-	return $a_file_types;
+		$s_path = "config/fileTypeInclude.xml";
+		$o_xml = simplexml_load_file($s_path);
+
+		$a_file_types = array();
+
+		foreach ($o_xml->file as $child) {
+			array_push($a_file_types, $child['extension']);
+		}
+
+		return $a_file_types;
     }
     
     
@@ -28,21 +28,27 @@
     */
     function fn_get_files($s_Path){
 	
-	$o_dir_iterator = new DirectoryIterator($s_Path);
+		$o_dir_iterator = new DirectoryIterator($s_Path);
 
-	$a_file_types = fn_get_user_specified_file_types();
-	
-	foreach($o_dir_iterator as $o_file) {
-	    if (!$o_dir_iterator->isDot()) {
-		
-		$s_extension = $o_file->getExtension();
-			
-		if( in_array($s_extension, $a_file_types)){
-		    printf("Filename: %s<br>", $o_file);
-		    printf("Extension: %s<br>", $s_extension);#
-		    printf("Path: %s", $o_file->getPath()."/".$o_file."<hr>");
+		$a_file_types = fn_get_user_specified_file_types();
+
+		foreach($o_dir_iterator as $o_file) {
+			if (!$o_dir_iterator->isDot()) {
+
+				$s_extension = $o_file->getExtension();
+
+				if( in_array($s_extension, $a_file_types)){
+					printf("Filename: %s<br>", $o_file);
+					printf("Extension: %s<br>", $s_extension);#
+					printf("Path: %s<br>", $o_file->getRealPath());
+					
+					//Get filename without extension
+					$i_file_name_length = strlen($o_file) - strlen($s_extension) - 1;
+					$s_file_name = substr($o_file->getFilename(), 0,$i_file_name_length);
+					
+					printf("Name: %s", $s_file_name."<hr>");
+				}
+			}
 		}
-	    }
-	}
     }
 ?>
