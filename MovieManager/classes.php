@@ -73,5 +73,18 @@ class Episode {
 	var $s_imdb_id;
 }
 
+class Search_Result {
+	static $s_id = "";
+	static $s_type = "";
+	static $s_year = "";
+	static $s_title = "";
+	
+	function __construct($s_title = "", $s_year = "", $s_id = "", $s_type = ""){
+		self::$s_title = $s_title;
+		self::$s_year = $s_year;
+		self::$s_id = $s_id;
+		self::$s_type = $s_type;
+	}
+}
 
 ?>

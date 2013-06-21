@@ -1,6 +1,8 @@
 <!Doctype html>
 <?php
 
+	require 'classes.php';
+
     /*
     * Function 	:   get file types from xml config file
     * Params 	:   None	
@@ -19,10 +21,46 @@
 		return $a_file_types;
     }
     
+	/*
+    * Function 	:   get file types from xml config file
+    * Params 	:   None	
+    * Returns 	:   Array of file types
+    */
+	function fn_search_titles($s_name){
+		
+		//Testing Start
+		$url = "http://www.omdbapi.com/?s=".urlencode($s_name)."&r=xml";
+
+		$xml = simplexml_load_file($url);
+		
+		if(!$xml->error){
+		
+			foreach ($xml->Movie as $movie){
+				
+				
+				$o_search_result = new Search_Result(
+						$movie['Title'],
+						$movie['Year'],
+						$movie['imdbID'],
+						$movie['Type']
+				);
+				
+				print("<br>");
+				//print($o_search_result->s_title." - ");
+				//print($o_search_result->s_year." - ");
+				//print($o_search_result->s_id." - ");
+				//print($o_search_result->s_type);
+				print("<hr style=\"width: 50%;\">");
+			}
+			print("<hr>");
+			
+		}
+
+	}
     
     /*
     * Function 	:   Search a directory and return an array of paths to files
-    *		    with a desired mime type (list found in the config)
+    *				with a desired mime type (list found in the config)
     * Params 	:   String (path to directory containing files)	
     * Returns 	:   Array of file paths
     */
@@ -47,6 +85,8 @@
 					$s_file_name = substr($o_file->getFilename(), 0,$i_file_name_length);
 					
 					printf("Name: %s", $s_file_name."<hr>");
+					
+					fn_search_titles($s_file_name);
 				}
 			}
 		}
