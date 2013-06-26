@@ -74,16 +74,21 @@ class Episode {
 }
 
 class Search_Result {
-	static $s_id = "";
-	static $s_type = "";
-	static $s_year = "";
-	static $s_title = "";
+	private $s_id = "";
+	private $s_type = "";
+	private $s_year = "";
+	private $s_title = "";
+	
+	function fn_get_id(){ return $this->s_id; }
+	function fn_get_type(){ return $this->s_type; }
+	function fn_get_year(){ return $this->s_year; }
+	function fn_get_title(){ return $this->s_title; }
 	
 	function __construct($s_title = "", $s_year = "", $s_id = "", $s_type = ""){
-		self::$s_title = $s_title;
-		self::$s_year = $s_year;
-		self::$s_id = $s_id;
-		self::$s_type = $s_type;
+		$this->s_title = (String)$s_title;
+		$this->s_year = (String)$s_year;
+		$this->s_id = (String)$s_id;
+		$this->s_type = (String)$s_type;
 	}
 }
 

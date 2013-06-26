@@ -22,40 +22,63 @@
     }
     
 	/*
-    * Function 	:   get file types from xml config file
+    * Function 	:   takes a movie and returns an array of possible matches
     * Params 	:   None	
-    * Returns 	:   Array of file types
+    * Returns 	:   Array of Search_Results
     */
-	function fn_search_titles($s_name){
+	function fn_search_matches($s_name, $b_arrgessive_search = false){
 		
-		//Testing Start
+	    $a_array_of_matches = array();
+		
 		$url = "http://www.omdbapi.com/?s=".urlencode($s_name)."&r=xml";
-
 		$xml = simplexml_load_file($url);
 		
-		if(!$xml->error){
+		$b_while_flag = true;
 		
-			foreach ($xml->Movie as $movie){
+		while($b_while_flag){
+			if(!$xml->error){
+				foreach ($xml->Movie as $movie){
+					$o_search_result = new Search_Result(
+							$movie['Title'],
+							$movie['Year'],
+							$movie['imdbID'],
+							$movie['Type']
+					);
+					array_push($a_array_of_matches, $o_search_result);	
+				}	
+				$b_while_flag = false;
+			}else if($b_arrgessive_search){
+				// If we can't find a match first time 
+				// Modify the string and do another search
+				// Takes a long time
 				
+				$s_name = preg_split("[\s|_|\.|\t|\n|\r|-]", $s_name);
 				
-				$o_search_result = new Search_Result(
-						$movie['Title'],
-						$movie['Year'],
-						$movie['imdbID'],
-						$movie['Type']
-				);
+				$s_search = "";
 				
-				print("<br>");
-				//print($o_search_result->s_title." - ");
-				//print($o_search_result->s_year." - ");
-				//print($o_search_result->s_id." - ");
-				//print($o_search_result->s_type);
-				print("<hr style=\"width: 50%;\">");
+				for($i_index_1 = count($s_name) - 1; $i_index_1 >= 0 ; $i_index_1--){
+					$s_search = "";
+					for($i_index_2 = 0; $i_index_2 < $i_index_1; $i_index_2++){
+						$s_search = $s_search.$s_name[$i_index_2]." ";
+					}
+					
+					$url = "http://www.omdbapi.com/?s=".urlencode($s_search)."&r=xml";
+					$xml = simplexml_load_file($url);
+					if(!$xml->error){
+						break;
+					}
+					
+				}
+				if($xml->error){
+					$b_while_flag = false;
+				}
+				
+			}else{
+				$b_while_flag = false;
 			}
-			print("<hr>");
-			
 		}
-
+		
+		return $a_array_of_matches;
 	}
     
     /*
@@ -84,9 +107,10 @@
 					$i_file_name_length = strlen($o_file) - strlen($s_extension) - 1;
 					$s_file_name = substr($o_file->getFilename(), 0,$i_file_name_length);
 					
-					printf("Name: %s", $s_file_name."<hr>");
-					
-					fn_search_titles($s_file_name);
+					printf("Name: %s", $s_file_name);
+					print("<hr>");
+					print_r(fn_search_matches($s_file_name, true));
+					print("<hr>");
 				}
 			}
 		}
