@@ -54,6 +54,10 @@
 				
 				$s_name = preg_split("[\s|_|\.|\t|\n|\r|-]", $s_name);
 				
+				if(count($s_name) <= 1){
+					break;
+				}
+				
 				$s_search = "";
 				
 				for($i_index_1 = count($s_name) - 1; $i_index_1 >= 0 ; $i_index_1--){
@@ -65,20 +69,30 @@
 					$url = "http://www.omdbapi.com/?s=".urlencode($s_search)."&r=xml";
 					$xml = simplexml_load_file($url);
 					if(!$xml->error){
+						foreach ($xml->Movie as $movie){
+							$o_search_result = new Search_Result(
+									$movie['Title'],
+									$movie['Year'],
+									$movie['imdbID'],
+									$movie['Type']
+							);
+							array_push($a_array_of_matches, $o_search_result);	
+						}	
 						break;
 					}
-					
 				}
-				if($xml->error){
-					$b_while_flag = false;
-				}
+				$b_while_flag = false;
+				
 				
 			}else{
 				$b_while_flag = false;
 			}
 		}
-		
-		return $a_array_of_matches;
+		if($a_array_of_matches){
+			return $a_array_of_matches;
+		}else{
+			return null;
+		}
 	}
     
     /*
@@ -87,8 +101,11 @@
     * Params 	:   String (path to directory containing files)	
     * Returns 	:   Array of file paths
     */
-    function fn_get_files($s_Path){
+    function fn_get_paths($s_Path){
 	
+		
+		$a_array_of_paths = array();
+		
 		$o_dir_iterator = new DirectoryIterator($s_Path);
 
 		$a_file_types = fn_get_user_specified_file_types();
@@ -99,20 +116,12 @@
 				$s_extension = $o_file->getExtension();
 
 				if( in_array($s_extension, $a_file_types)){
-					printf("Filename: %s<br>", $o_file);
-					printf("Extension: %s<br>", $s_extension);#
-					printf("Path: %s<br>", $o_file->getRealPath());
 					
-					//Get filename without extension
-					$i_file_name_length = strlen($o_file) - strlen($s_extension) - 1;
-					$s_file_name = substr($o_file->getFilename(), 0,$i_file_name_length);
-					
-					printf("Name: %s", $s_file_name);
-					print("<hr>");
-					print_r(fn_search_matches($s_file_name, true));
-					print("<hr>");
+					array_push($a_array_of_paths, $o_file->getRealPath());	
 				}
 			}
 		}
+		return $a_array_of_paths;
     }
+	
 ?>

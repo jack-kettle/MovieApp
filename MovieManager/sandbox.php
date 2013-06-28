@@ -20,4 +20,28 @@
 	
     }
     
+	
+	
+	
+	
+	
+	
+	/*
+				if( in_array($s_extension, $a_file_types)){
+					printf("Filename: %s<br>", $o_file);
+					printf("Extension: %s<br>", $s_extension);#
+					printf("Path: %s<br>", $o_file->getRealPath());
+					
+					//Get filename without extension
+					$i_file_name_length = strlen($o_file) - strlen($s_extension) - 1;
+					$s_file_name = substr($o_file->getFilename(), 0,$i_file_name_length);
+					
+					//array_push($a_array_of_paths, $o_file->getRealPath());	
+					
+					printf("Name: %s", $s_file_name);
+					print("<hr>");
+					print_r(fn_search_matches($s_file_name, true));
+					print("<hr>");
+				}
+	 */
 ?>
